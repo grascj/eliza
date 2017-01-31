@@ -13,7 +13,7 @@ def hello():
 def outhere():
     if(request.method == "POST"):
         print('POST')
-        name=request.form['name']
+        name=request.form["name"]
         cur=datetime.datetime.now()
         date=cur.strftime("%Y-%m-%d %H:%M")
         return render_template("eliza.html",name=name,date=date);
@@ -24,6 +24,8 @@ def outhere():
 
 @application.route("/eliza/DOCTOR/",methods=["POST"])
 def doktor():
+    question = request.get_json()
+
     
     return ""
 

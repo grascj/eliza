@@ -1,2 +1,3 @@
 *.sock
 eliza_env
+*.pyc
