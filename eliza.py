@@ -25,6 +25,7 @@ def outhere():
 @application.route("/eliza/DOCTOR/",methods=["POST"])
 def doktor():
     question = request.get_json()
+    #test comment
     return question["human"]
 
 
