@@ -19,15 +19,23 @@ def outhere():
         return render_template("eliza.html",name=name,date=date);
     else:
         print('NOT POST')
-        return render_template("eliza.html");
+        return render_template("eliza.html")
 
 
 @application.route("/eliza/DOCTOR/",methods=["POST"])
 def doktor():
     question = request.get_json()
+    return question["human"]
 
-    
-    return ""
+
+
+
+#for getting eliza's response
+def therapy(sentence):
+    return sentence
+
+
 
 if __name__ == "__main__":
     application.run(host='0.0.0.0')
+
