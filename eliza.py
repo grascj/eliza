@@ -26,8 +26,8 @@ def outhere():
 def doktor():
     question = request.get_json()
     # test comment
-    # question['human'] is the string to be responded to
-    return question['human']
+    # question['human'] is the string to be responded to 
+    return "{\"eliza\", \"" + analyze(question['human']) + "\"}" 
  
 
 
