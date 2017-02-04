@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, jsonify, render_template, request
 import datetime
 
 application = Flask(__name__)
@@ -24,12 +24,15 @@ def outhere():
 @application.route("/eliza/DOCTOR", methods=["POST"])
 def doktor():
     question = request.get_json()
-    return question["human"]
+    #test comment
+    #return question["human"]
+    return therapy(question)
 
 
 # for getting eliza's response
 def therapy(sentence):
-    return sentence
+    
+    return jsonify({'eliza', question}) 
 
 
 if __name__ == "__main__":
