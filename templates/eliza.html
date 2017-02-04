@@ -3,8 +3,11 @@
 		<h1>ELIZA</h1>
 		{% if name  %}
 		<h1>Hello {{ name }}! {{ date }}</h1>
-		
-		<form method="post" action="">
+			
+		<form action="../eliza.py" enctype="application/json" method="post">
+			Statement: <input type="text" name="human">
+			<input type="submit" value="Submit">
+		</form>	
 		
 		{% else %}
 		<form method="post" action="">
