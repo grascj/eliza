@@ -1,8 +1,5 @@
 from flask import Flask, jsonify, render_template, request
 import datetime
-import re
-import random
- 
 
 application = Flask(__name__)
 application.debug = True
