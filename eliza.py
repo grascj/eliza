@@ -24,15 +24,14 @@ def outhere():
 @application.route("/eliza/DOCTOR", methods=["POST"])
 def doktor():
     question = request.get_json()
-    #test comment
-    #return question["human"]
-    return therapy(question)
+    # test comment
+    return question["human"]
+    # return therapy(question)
 
 
 # for getting eliza's response
 def therapy(sentence):
-    
-    return jsonify({'eliza', question}) 
+    return jsonify({'eliza', sentence})
 
 
 if __name__ == "__main__":

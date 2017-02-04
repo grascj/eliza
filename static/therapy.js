@@ -16,6 +16,7 @@ function get_therapy(event){
 			complete: function(data){
 				console.log("COMPLETE");
 				console.log(data.responseText);
+				alert("DOCTOR response: \"" + data.responseText+"\"");
 			},
 		});
 	}
