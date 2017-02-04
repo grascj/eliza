@@ -1,13 +1,35 @@
 <html>
+	<head>
+	<!-- Latest compiled and minified CSS -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script type=text/javascript src="{{ url_for('static', filename='therapy.js') }}"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<title>ELIZA</title>
+	</head>
+
 	<body>
-		<h1>ELIZA</h1>
-		{% if name  %}
-		<h1>Hello {{ name }}! {{ date }}</h1>
-		{% else %}
-		<form method="post" action="">
-			<h1>Enter thy name:</h1><br>
-			<input type="text" name="name">
-		</form>
-		{% endif %}
+		<div class="container">
+			<h1>ELIZA</h1>
+			{% if name  %}
+			<h1>Hello {{ name }}! {{ date }}</h1>
+			<div class="container">
+
+				<div class="container">
+				</div>
+				<div class="container">
+					<input id="therapy_text" type="text" onkeypress="get_therapy(event);">
+				</div>
+			</div>
+			{% else %}
+			<form method="post" action="">
+				<h1>Enter thy name:</h1><br>
+				<input type="text" name="name">
+			</form>
+			{% endif %}
+		</div>
 	</body>
 </html>
+
+
+
+
