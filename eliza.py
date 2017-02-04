@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, render_template, request
 import datetime
+from response import analyze
 
 application = Flask(__name__)
 application.debug = True
@@ -25,7 +26,11 @@ def outhere():
 def doktor():
     question = request.get_json()
     # test comment
-    return analyze(question)["eliza"]
+    # question['human'] is the string to be responded to
+    return question['human']
  
+
+
+
 if __name__ == "__main__":
     application.run(host='0.0.0.0')
