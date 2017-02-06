@@ -1,5 +1,6 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, render_template, request
 import datetime
+import json
 from response import analyze
 
 application = Flask(__name__)
@@ -25,10 +26,11 @@ def outhere():
 @application.route("/eliza/DOCTOR", methods=["POST"])
 def doktor():
     question = request.get_json()
+
+    resp = {"eliza": analyze(question['human'])}
     # test comment
-    # question['human'] is the string to be responded to 
-    return "{\"eliza\", \"" + analyze(question['human']) + "\"}" 
- 
+    # question['human'] is the string to be responded to
+    return json.dumps(resp)
 
 
 

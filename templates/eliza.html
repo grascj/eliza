@@ -13,11 +13,10 @@
 			{% if name  %}
 			<h1>Hello {{ name }}! {{ date }}</h1>
 			<div class="container">
-
-				<div class="container">
+				<div class="container" id="conversation">
 				</div>
 				<div class="container">
-					<input id="therapy_text" type="text" onkeypress="get_therapy(event);">
+					<input id="therapy_text" type="text" onkeypress="get_therapy(event,&quot;{{name}}&quot;);">
 				</div>
 			</div>
 			{% else %}
@@ -29,7 +28,4 @@
 		</div>
 	</body>
 </html>
-
-
-
 
