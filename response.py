@@ -1,3 +1,7 @@
+# slackbot-eliza
+# Author: David Benjamin
+# https://github.com/slowbluecamera/slackbot-eliza
+
 import re
 import random
 
