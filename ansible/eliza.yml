@@ -1,0 +1,44 @@
+---
+- hosts: all
+  tasks:
+
+        - name: INSTALL PACKAGES FROM APT
+          apt: pkg={{ item }} state=present update_cache=true
+          with_items:
+                - git
+                - nginx
+                - python
+                - python-pip
+                - python-dev
+
+
+        - name: INSTALL PACKAGES FROM PIP
+          pip: name={{ item }}
+          with_items:
+                - virtualenv
+
+        - name: CLONING REPO
+          git: repo=https://github.com/grascj/eliza.git dest=/var/www/html/test accept_hostkey=true force=yes
+
+        - name: CREATE VIRTUALENV
+          command: virtualenv /var/www/html/test/eliza/eliza_env creates="/var/www/html/test/eliza/eliza_env"
+
+        - name: INSTALL VIRTUALENV REQUIREMENTS
+          pip:
+                name: 
+                  - uwsgi 
+                  - flask 
+                virtualenv: /var/www/html/test/eliza/eliza_env
+
+
+         - name: MOVING STARTUP SCRIPT
+           command: mv /var/www/html/test/ansible/eliza.conf /etc/init/eliza.conf
+
+        - name: MOVING CONF FILE
+          command: mv /var/www/html/test/ansible/nginx.conf /etc/nginx/nginx.conf
+          notify:
+                - start nginx
+
+  handlers:
+         - name: start nginx
+           command: service nginx restart
