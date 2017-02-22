@@ -36,6 +36,9 @@
 
         - name: MOVING CONF FILE
           command: mv /var/www/html/eliza/ansible/nginx.conf /etc/nginx/nginx.conf
+          
+        - name: STARTING ELIZA
+          command: start eliza 
           notify:
                 - start nginx
 
