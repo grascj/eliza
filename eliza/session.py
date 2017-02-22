@@ -1,12 +1,33 @@
 from flask import Flask, redirect, request, url_for
+from flask_mail import Mail, Message
+
 app = Flask(__name__)
+
+app.config['MAIL_SERVER']='smpt.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'thelads420@gmail.com'
+app.config['MAIL_PASSWORD'] = 'depression!!!'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 @app.route('/adduser', methods=['GET', 'POST'])
 def adduser():
+    if (request.method == 'POST'):
+	
+        # check captcha success
+	if (request.form['captcha'] != 'I\'m human yo'
+	    return redirect(utl_for('/adduser'))
     
+        # Send email to user with key
+	email = response.form['email']
+	mbody = 'Your key: \n\n' + #some random key
+	msg = Message(subject='Eliza Signup', recipients=email, body=mbody)
+	mail.send(msg)
 
 @app.route('/verify', methods=['GET', 'POST'])
 def verify():
+
 
 @app.route('/listconv')
 def listconv():
