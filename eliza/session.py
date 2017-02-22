@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 app.config['MAIL_SERVER']='smpt.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'thelads420@gmail.com'
+app.config['MAIL_USERNAME'] = 'ladoftheropes@gmail.com'
 app.config['MAIL_PASSWORD'] = 'depression!!!'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
@@ -17,13 +17,14 @@ def adduser():
 	
         # check captcha success
 	if (request.form['captcha'] != 'I\'m human yo'
-	    return redirect(utl_for('/adduser'))
+	    return redirect(url_for('/adduser'))
     
         # Send email to user with key
 	email = response.form['email']
 	mbody = 'Your key: \n\n' + #some random key
 	msg = Message(subject='Eliza Signup', recipients=email, body=mbody)
 	mail.send(msg)
+	return redirect(url_for('/adduser'))
 
 @app.route('/verify', methods=['GET', 'POST'])
 def verify():
