@@ -28,8 +28,6 @@ def doktor():
     question = request.get_json()
 
     resp = {"eliza": analyze(question['human'])}
-    # test comment
-    # question['human'] is the string to be responded to
     return json.dumps(resp)
 
 
