@@ -1,15 +1,35 @@
 from flask import Flask, redirect, request, url_for
 from flask_mail import Mail, Message
+from datetime import datetime
 
 app = Flask(__name__)
 
-app.config['MAIL_SERVER']='smpt.gmail.com'
+app.config['MAIL_SERVER']= 'smpt.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'ladoftheropes@gmail.com'
 app.config['MAIL_PASSWORD'] = 'depression!!!'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
+
+userDict = {['username']:, 'password':}
+convlistDict = {['username']:, 'convist':}
+convDict = {['id']:, 'start_date':, 'conv':}
+statement = {['timestamp']:, 'name':, 'text'}
+
+def storestatement(timestamp, name, text):
+	# add statement entry
+	statement['timestamp'] = timestamp
+    statement['name'] = name
+	statement['text'] = text
+
+	# add statement to convDict
+	convDict['id'] = len(convDict)
+    convDict['start_date'] = datetime.now().time()
+    convDict['text'] = text
+
+    # add convDict to convlistDict
+	convlistDict
 
 @app.route('/adduser', methods=['GET', 'POST'])
 def adduser():
