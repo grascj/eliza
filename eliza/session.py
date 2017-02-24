@@ -31,6 +31,8 @@ def storestatement(timestamp, name, text):
     # add convDict to convlistDict
 	convlistDict
 
+
+
 @app.route('/adduser', methods=['GET', 'POST'])
 def adduser():
     if (request.method == 'POST'):
