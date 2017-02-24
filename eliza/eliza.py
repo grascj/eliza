@@ -1,36 +1,36 @@
 from flask import Flask, render_template, request
-import datetime
+from datetime import datetime
 import json
 from response import analyze
+import session
 
-application = Flask(__name__)
-application.debug = True
+app = Flask(__name__)
+app.debug = True
 
+@app.route('/')
+def redir():
+	return redirect(url_for('/login')
 
-@application.route("/")
-def hello():
-    return render_template("index.html")
-
-
-@application.route("/eliza/", methods=["GET", "POST"])
-def outhere():
-    if(request.method == "POST"):
-        name = request.form["name"]
-        cur = datetime.datetime.now()
-        date = cur.strftime("%Y-%m-%d %H:%M:%S")
-        return render_template("eliza.html", name=name, date=date)
-    else:
-        return render_template("eliza.html")
-
-
-@application.route("/eliza/DOCTOR", methods=["POST"])
+@app.route('/eliza/DOCTOR', methods=['POST'])
 def doktor():
+	# conversation elements
     question = request.get_json()
+    resp = {'eliza': analyze(question['human'])}
 
-    resp = {"eliza": analyze(question['human'])}
+	session.storestatements(question['human'], resp['eliza'])
+	# update conversation in database
+
+    # question['human'] is the string to be responded to
     return json.dumps(resp)
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+	if (request.method == 'POST'):
+		username = request.form['username']
+		password = request.form['password']
 
+		
+	
 
 if __name__ == "__main__":
     application.run(host='0.0.0.0')
