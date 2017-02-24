@@ -14,6 +14,16 @@ def putuser(username, password, email):
 	cursor.execute('INSERT INTO ElizaUser(username, password, email) \
 		VALUES(' + username + ', ' + password + ', ' + email + ');')
 
+def activateuser(username, key):
+	cursor.execute('SELECT * ElizaUser WHERE username = ' + username +\
+		' AND key = ' + key)
+	user = cursor.fetchone()
+
+	if (user == None):
+		return False
+	
+	
+
 def putstatements(humantext, elizatext):
 	cursor.execute('INSERT INTO Statement(name, text) \
 		VALUES(' + session['username'] + ', ' + humantext + ');')
@@ -23,7 +33,7 @@ def putstatements(humantext, elizatext):
 
 def putconversation(username)
 	cursor.execute('COUNT * FROM Conversation WHERE username = ' + username')')
-	convid = cursor.getone()
+	convid = cursor.fetchone()
 
 	cursor.execute('INSERT INTO Conversation(username, convid) \
 		VALUES(' + username + ', ' + convid + ');')
@@ -32,18 +42,27 @@ def checklogin(username, password):
 	cursor.execute('SELECT * FROM ElizaUser WHERE username = ' + username + ' AND  \
 		password = ' + password + ' AND activated = true')
 
-	user = cursor.getone()
+	user = cursor.fetchone()
 	if (user == None):
-		return false
+		return False
 	
-	return true
+	# login SUCCESS, add cookie to ElizaUser instance
+	cursor.execute('UPDATE ElizaUser cookie = ' + cookie + ' WHERE username = ' + \
+		username)
+	return True
+
+def getuser(cookie):
+	cursor.execute('SELECT * FROM ElizaUser WHERE cookie = ' + cookie)
+	
+	user = cursor.fetchone()
+	return user.username
 
 def getconv(username, convid):
 	cursor.execute('SELECT * FROM Conversation WHERE username = ' + username \
 		+ 'AND convid = ' + convid + ' ORDER BY timestamp DESC')
 	
 	conv = []
-	while ((entry = cursor.getone()) != None):
+	while ((entry = cursor.fetchone()) != None):
 		conv.append(entry)
 
 	return conv
@@ -52,7 +71,7 @@ def getconvlist(username):
 	cursor.execute('SELECT * FROM Conversation WHERE username = ' + username)
 
 	convlist = []
-	while ((conv = cursor.getone()) != None):
+	while ((conv = cursor.fetchone()) != None):
 		convlist.append(conv)
 
 	return convlist

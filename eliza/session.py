@@ -14,84 +14,39 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 
-# database setup
-app.configapp.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
-app.config['MYSQL_DATABASE_DB'] = 'EmpData'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-mysql = MySQL()
-mysql.init_app(app)
-
-
 def storestatements(humantext, elizatext):
-    cursor = mysql.connect().cursor()
-    cursor.execute('INSERT INTO Statement(timestamp, name, text) \
-            VALUES(NOW(), ' + session['username'] + ', ' + humantext +');')
+	dbio.putstatement(humantext, elizatext)
+	return None
 
-    cursor.execute('INSERT INTO Statement(timestamp, name, text) \
-            VALUES(NOW(), Eliza, ' + elizatext + ');')
+def adduser(username, password, email):
+	dbio.putuser(username, password, email)	
+ 
+	# send email to user with key
+    mbody = 'Your key: \n\n' + ""# some random key
+    msg = Message(subject='Eliza Signup', recipients=email, body=mbody)
+    mail.send(msg)
+	return None
 
+def verify(key):
+	# check for backdoor
+	if (key == 'abracadabra'):
+		return True
+	
+	return dbio.activateuser(key)	
 
-@app.route('/adduser', methods=['GET', 'POST'])
-def adduser():
-    if (request.method == 'POST'):
-
-        # check captcha success
-        if (request.form['captcha'] != 'I\'m human yo'):
-            return redirect(url_for('/adduser'))
-
-        # add new user to database
-        username = request.form['username']
-        password = request.form['password']
-        email = request.form['email']
-        cursor = mysql.connect().cursor()
-        cursor.execute('INSERT INTO ElizaUser(username, password, email, status) \
-                VALUES(' + username + ', ' + password + ', ' + email + ', disabled);')
-        # send email to user with key
-        mbody = 'Your key: \n\n' + ""# some random key
-        msg = Message(subject='Eliza Signup', recipients=email, body=mbody)
-        mail.send(msg)
-        return redirect(url_for('/adduser'))
-
-
-@app.route('/verify', methods=['GET', 'POST'])
-def verify():
-    if (request.method == 'POST'):
-        return None
-
-
-@app.route('/listconv')
 def listconv():
     return None
     # return JSON array of {conv_id, start_date}
 
-
-@app.route('/getconv', methods=['GET', 'POST'])
 def getconv():
     if (request.method == 'POST'):
         convid = request.form['conv_id']
         # load conversation with conv_id
         return convid
 
+def trylogin(username, password):
+    return dbio.checklogin(username, password)    
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if (request.method == 'POST'):
-        username = request.form['username']
-        password = request.form['password']
-
-        resp.set_cookie('info', username + ',' + password)
-        return resp
-
-    if(0): # TODO already logged in before
-        info = request.cookies.get('info')
-        info = info.split(',')
-        username = info[0]
-        password = info[1]
-    return redirect(url_for('eliza'))
-
-
-@app.route('/logout')
 def logout():
     session.pop('username', None)
     session.pop('password', None)

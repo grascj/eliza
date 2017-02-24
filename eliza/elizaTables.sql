@@ -4,6 +4,7 @@ CREATE TABLE ElizaUser (
 	username CHAR(30) NOT NULL,
 	password CHAR(30) NOT NULL,
 	email CHAR(50) NOT NULL,
+	cookie INTEGER UNIQUE NOT NULL,
 	activated BOOLEAN DEFAULT false,
 	PRIMARY KEY (username)
 );
