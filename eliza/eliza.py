@@ -6,20 +6,42 @@ from flask_recaptcha import ReCaptcha
 #import session
 
 app = Flask(__name__)
-recaptcha = ReCaptcha(app=app)
 app.debug = True
 
+recaptcha = ReCaptcha()
+recaptcha.init_app(app)
+recaptcha.is_enabled = True
+recaptcha.theme = "light"
+recaptcha.type = "image"
+recaptcha.size = "normal"
+recaptcha.tabindex = 0
+
+
+print(recaptcha.is_enabled)
+print(recaptcha.get_code())
 
 @app.route('/')
 def redir():
     return redirect(url_for('login'))
 
 
-@app.route('/adduser')
-def redir():
-    return redirect(url_for('login'))
-        if(recaptcha.verify()):
+@app.route('/adduser', methods=['GET', 'POST'])
+def addusr():
+    return render_template("adduser.html")
+    #if(request.method == 'POST'):
+    #    if(recaptcha.verify()):
+    #        return "SUCCESS"
+    #    else:
+    #        return "FAILURE"
 
+
+@app.route('/verify', methods=['POST'])
+def verifyusr():
+    if(request.method == 'POST'):
+        if(recaptcha.verify()):
+            return "SUCCESS"
+        else:
+            return "FAILURE"
 
 
 @app.route('/eliza/DOCTOR', methods=['POST'])

@@ -23,9 +23,11 @@
                 - git
                 - nginx
                 - python-pip
+                - python3-pip
                 - python-dev
                 - upstart
                 - mysql-server
+                - python3
 
 
         - name: INSTALL PACKAGES FROM PIP
@@ -43,13 +45,7 @@
 
 
         - name: INSTALL VIRTUALENV REQUIREMENTS
-          pip:
-                name: 
-                  - uwsgi 
-                  - flask 
-                  - flask-mysql
-                  - flask-recaptcha
-                virtualenv: "{{app_path}}eliza/eliza_env"
+          command: pip3 install uwsgi flask flask-mysql flask-recaptcha
 
 
         - name: MOVING STARTUP SCRIPT

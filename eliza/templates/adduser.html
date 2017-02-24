@@ -1,0 +1,19 @@
+
+<html>
+	<body>
+		<h1>Add user:</h1>
+		<form method="post" action="/verify">
+			<p>email:</p>
+			<input type="text" name="email">
+			<p>username:</p>
+			<input type="text" name="username">
+			<p>password:</p>
+			<input type="text" name="password">
+			{{ recaptcha }}
+			<input type="submit" value="Submit">
+		</form>
+	</body>
+</html>
+
+
+
