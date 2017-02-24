@@ -17,8 +17,8 @@ def doktor():
     question = request.get_json()
     resp = {'eliza': analyze(question['human'])}
 
-	# update conversation in database
 	session.storestatements(question['human'], resp['eliza'])
+	# update conversation in database
 
     # question['human'] is the string to be responded to
     return json.dumps(resp)
