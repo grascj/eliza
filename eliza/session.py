@@ -1,9 +1,11 @@
 from flask import Flask, redirect, request, url_for
 from flask_mail import Mail, Message
+from flaskext.mysql import MySQL
 from datetime import datetime
 
 app = Flask(__name__)
 
+# mail setup
 app.config['MAIL_SERVER']= 'smpt.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'ladoftheropes@gmail.com'
@@ -12,43 +14,47 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 
-userDict = {['username']:, 'password':}
-convlistDict = {['username']:, 'convist':}
-convDict = {['id']:, 'start_date':, 'conv':}
-statement = {['timestamp']:, 'name':, 'text'}
+# database setup
+app.configapp.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
+app.config['MYSQL_DATABASE_DB'] = 'EmpData'
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+mysql = MySQL()
+mysql.init_app(app)
 
-def storestatement(timestamp, name, text):
-	# add statement entry
-	statement['timestamp'] = timestamp
-    statement['name'] = name
-	statement['text'] = text
-
-	# add statement to convDict
-	convDict['id'] = len(convDict)
-    convDict['start_date'] = datetime.now().time()
-    convDict['text'] = text
-
-    # add convDict to convlistDict
-	convlistDict
+def storestatements(humantext, elizatext):
+	cursor = mysql.connect().cursor()
+	cursor.execute('INSERT INTO Statement(timestamp, name, text) \
+		VALUES(NOW(), ' + session['username'] + ', ' + humantext +');')
+	
+	cursor.execute('INSERT INTO Statement(timestamp, name, text) \
+		VALUES(NOW(), Eliza, ' + elizatext + ');')
 
 @app.route('/adduser', methods=['GET', 'POST'])
 def adduser():
     if (request.method == 'POST'):
 	
-        # check captcha success
-	if (request.form['captcha'] != 'I\'m human yo'
-	    return redirect(url_for('/adduser'))
+    	# check captcha success
+		if (request.form['captcha'] != 'I\'m human yo'):
+	    	return redirect(url_for('/adduser'))
     
-        # Send email to user with key
-	email = response.form['email']
-	mbody = 'Your key: \n\n' + #some random key
-	msg = Message(subject='Eliza Signup', recipients=email, body=mbody)
-	mail.send(msg)
-	return redirect(url_for('/adduser'))
+    	# add new user to database
+		username = request.form['username']
+		password = request.form['password']
+		email = request.form['email']
+		cursor = mysql.connect().cursor()
+		cursor.execute('INSERT INTO ElizaUser(username, password, email, status) \
+			VALUES(' + username + ', ' + password + ', ' + email + ', disabled);')
+		# send email to user with key
+		mbody = 'Your key: \n\n' + #some random key
+		msg = Message(subject='Eliza Signup', recipients=email, body=mbody)
+		mail.send(msg)
+		return redirect(url_for('/adduser'))
 
 @app.route('/verify', methods=['GET', 'POST'])
 def verify():
-
+	if (request.method == 'POST'):
+		
 
 @app.route('/listconv')
 def listconv():
@@ -71,12 +77,12 @@ def login():
 	return resp
 
     if #already logged in before
-	info = request.cookies.get('info')
-	info = info.split(',')
+		info = request.cookies.get('info')
+		info = info.split(',')
         username = info[0]
-	password = info[1]
+		password = info[1]
 
-	return redirect(url_for('eliza')) 
+		return redirect(url_for('eliza')) 
 
 @app.route('/logout')
 def logout():
