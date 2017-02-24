@@ -22,6 +22,7 @@ app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql = MySQL()
 mysql.init_app(app)
 
+
 def storestatements(humantext, elizatext):
     cursor = mysql.connect().cursor()
     cursor.execute('INSERT INTO Statement(timestamp, name, text) \
@@ -29,7 +30,6 @@ def storestatements(humantext, elizatext):
 
     cursor.execute('INSERT INTO Statement(timestamp, name, text) \
             VALUES(NOW(), Eliza, ' + elizatext + ');')
-
 
 
 @app.route('/adduser', methods=['GET', 'POST'])
@@ -89,6 +89,7 @@ def login():
         username = info[0]
         password = info[1]
     return redirect(url_for('eliza'))
+
 
 @app.route('/logout')
 def logout():
