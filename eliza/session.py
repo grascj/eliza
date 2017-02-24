@@ -23,68 +23,72 @@ mysql = MySQL()
 mysql.init_app(app)
 
 def storestatements(humantext, elizatext):
-	cursor = mysql.connect().cursor()
-	cursor.execute('INSERT INTO Statement(timestamp, name, text) \
-		VALUES(NOW(), ' + session['username'] + ', ' + humantext +');')
-	
-	cursor.execute('INSERT INTO Statement(timestamp, name, text) \
-		VALUES(NOW(), Eliza, ' + elizatext + ');')
+    cursor = mysql.connect().cursor()
+    cursor.execute('INSERT INTO Statement(timestamp, name, text) \
+            VALUES(NOW(), ' + session['username'] + ', ' + humantext +');')
+
+    cursor.execute('INSERT INTO Statement(timestamp, name, text) \
+            VALUES(NOW(), Eliza, ' + elizatext + ');')
 
 
 
 @app.route('/adduser', methods=['GET', 'POST'])
 def adduser():
     if (request.method == 'POST'):
-	
-    	# check captcha success
-		if (request.form['captcha'] != 'I\'m human yo'):
-	    	return redirect(url_for('/adduser'))
-    
-    	# add new user to database
-		username = request.form['username']
-		password = request.form['password']
-		email = request.form['email']
-		cursor = mysql.connect().cursor()
-		cursor.execute('INSERT INTO ElizaUser(username, password, email, status) \
-			VALUES(' + username + ', ' + password + ', ' + email + ', disabled);')
-		# send email to user with key
-		mbody = 'Your key: \n\n' + #some random key
-		msg = Message(subject='Eliza Signup', recipients=email, body=mbody)
-		mail.send(msg)
-		return redirect(url_for('/adduser'))
+
+        # check captcha success
+        if (request.form['captcha'] != 'I\'m human yo'):
+            return redirect(url_for('/adduser'))
+
+        # add new user to database
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+        cursor = mysql.connect().cursor()
+        cursor.execute('INSERT INTO ElizaUser(username, password, email, status) \
+                VALUES(' + username + ', ' + password + ', ' + email + ', disabled);')
+        # send email to user with key
+        mbody = 'Your key: \n\n' + ""# some random key
+        msg = Message(subject='Eliza Signup', recipients=email, body=mbody)
+        mail.send(msg)
+        return redirect(url_for('/adduser'))
+
 
 @app.route('/verify', methods=['GET', 'POST'])
 def verify():
-	if (request.method == 'POST'):
-		
+    if (request.method == 'POST'):
+        return None
+
 
 @app.route('/listconv')
 def listconv():
+    return None
     # return JSON array of {conv_id, start_date}
+
 
 @app.route('/getconv', methods=['GET', 'POST'])
 def getconv():
     if (request.method == 'POST'):
-	convid = request.form['conv_id']
-	# load conversation with conv_id
+        convid = request.form['conv_id']
+        # load conversation with conv_id
+        return convid
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if (request.method == 'POST'):
-	username = request.form['username']
-	password = request.form['password']
-	
-	resp.set_cookie('info', username + ',' + password)
-	
-	return resp
+        username = request.form['username']
+        password = request.form['password']
 
-    if #already logged in before
-		info = request.cookies.get('info')
-		info = info.split(',')
+        resp.set_cookie('info', username + ',' + password)
+        return resp
+
+    if(0): # TODO already logged in before
+        info = request.cookies.get('info')
+        info = info.split(',')
         username = info[0]
-		password = info[1]
-
-		return redirect(url_for('eliza')) 
+        password = info[1]
+    return redirect(url_for('eliza'))
 
 @app.route('/logout')
 def logout():
