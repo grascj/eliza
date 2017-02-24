@@ -3,13 +3,13 @@ from datetime import datetime
 import json
 from response import analyze
 from flask_recaptcha import ReCaptcha
-import session
+#import session
 
-app = Flask(__name__)
-app.debug = True
+application = Flask(__name__)
+application.debug = True
 
 recaptcha = ReCaptcha()
-recaptcha.init_app(app)
+recaptcha.init_app(application)
 recaptcha.is_enabled = True
 recaptcha.theme = "light"
 recaptcha.type = "image"
@@ -20,31 +20,21 @@ recaptcha.tabindex = 0
 print(recaptcha.is_enabled)
 print(recaptcha.get_code())
 
-@app.route('/')
+@application.route('/')
 def redir():
     return redirect(url_for('login'))
 
-@app.route('/adduser', methods=['GET', 'POST'])
+@application.route('/adduser', methods=['GET', 'POST'])
 def adduser():
+    return render_template("adduser.html")
     if (request.method == 'POST'):
         username = request.form['username']
         password = request.form['password']
-		email = request.form['email']
-		session.adduser(username, password, email)
-		return redirect(url_for('verify'))
+        email = request.form['email']
+        session.adduser(username, password, email)
+        return redirect(url_for('verify'))
 
-    return redirect(url_for('adduser'))
-@app.route('/adduser', methods=['GET', 'POST'])
-def addusr():
-    return render_template("adduser.html")
-    #if(request.method == 'POST'):
-    #    if(recaptcha.verify()):
-    #        return "SUCCESS"
-    #    else:
-    #        return "FAILURE"
-
-
-@app.route('/verify', methods=['POST'])
+@application.route('/verify', methods=['POST'])
 def verifyusr():
     if(request.method == 'POST'):
         if(recaptcha.verify()):
@@ -52,19 +42,19 @@ def verifyusr():
         else:
             return "FAILURE"
 
-@app.route('/verify', methods=['GET', 'POST'])
+@application.route('/verify', methods=['GET', 'POST'])
 def verify():
-	if (request.method == 'POST'):
-		#TODO check captcha
-		key = request.form['key']
-		if (session.verify(key)):
-			return redirect(url_for('eliza'))
-		else:
-			return redirect(url_for('verify'))
-	
-	return redirect(url_for('verify'))
+    if (request.method == 'POST'):
+        #TODO check captcha
+        key = request.form['key']
+        if (session.verify(key)):
+            return redirect(url_for('eliza'))
+        else:
+            return redirect(url_for('verify'))
 
-@app.route('/login', methods=['GET', 'POST'])
+        return redirect(url_for('verify'))
+
+@application.route('/login', methods=['GET', 'POST'])
 def login():
     if (request.method == 'POST'):
         username = request.form['username']
@@ -73,13 +63,13 @@ def login():
     if (session.trylogin(username, password)):
 		return redirect(url_for('eliza'))
 
-	return None
+    return None
 
-@app.route('/logout', methods=['GET'])
+@application.route('/logout', methods=['GET'])
 def logout():
 	return session.logout()
 
-@app.route('/eliza', methods=['POST'])
+@application.route('/eliza', methods=['POST'])
 def doktor():
     # conversation elements
     question = request.get_json()
@@ -92,4 +82,4 @@ def doktor():
     return json.dumps(resp)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    application.run(host='0.0.0.0')
