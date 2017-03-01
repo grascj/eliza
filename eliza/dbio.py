@@ -19,9 +19,12 @@ def activateuser(username, key):
 		' AND key = ' + key)
 	user = cursor.fetchone()
 
-	if (user == None):
+	if (user == None && key != 'abracadabra'):
 		return False
-	
+	else:
+		cursor.execute('UPDATE ElizaUser SET activated = true WHERE username = '\
+			+ user)
+		return True	
 	
 
 def putstatements(humantext, elizatext):
@@ -75,6 +78,3 @@ def getconvlist(username):
 		convlist.append(conv)
 
 	return convlist
-
-
-

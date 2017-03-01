@@ -26,40 +26,37 @@ def redir():
 
 @application.route('/adduser', methods=['GET', 'POST'])
 def adduser():
-    return render_template("adduser.html")
     if (request.method == 'POST'):
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
         session.adduser(username, password, email)
         return redirect(url_for('verify'))
-
-@application.route('/verify', methods=['POST'])
-def verifyusr():
-    if(request.method == 'POST'):
-        if(recaptcha.verify()):
-            return "SUCCESS"
-        else:
-            return "FAILURE"
+	else:	
+    	return render_template('adduser.html')
 
 @application.route('/verify', methods=['GET', 'POST'])
 def verify():
-    if (request.method == 'POST'):
-        #TODO check captcha
-        key = request.form['key']
+	if (request.method == 'POST'):
+        if(recaptcha.verify()):
+        	
+		key = request.form['key']
         if (session.verify(key)):
             return redirect(url_for('eliza'))
         else:
-            return redirect(url_for('verify'))
-
-        return redirect(url_for('verify'))
+            return render_template('verify.html', msg='Incorrect key')
+    else:
+		return render_template('verify.html')
 
 @application.route('/login', methods=['GET', 'POST'])
 def login():
     if (request.method == 'POST'):
         username = request.form['username']
         password = request.form['password']
-
+	else:
+		# check for login status
+		session.
+		render_template('login.html')
     if (session.trylogin(username, password)):
 		return redirect(url_for('eliza'))
 
@@ -71,6 +68,7 @@ def logout():
 
 @application.route('/eliza', methods=['POST'])
 def doktor():
+	
     # conversation elements
     question = request.get_json()
     resp = {'eliza': analyze(question['human'])}

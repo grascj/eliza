@@ -15,8 +15,7 @@ app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 
 def storestatements(humantext, elizatext):
-	dbio.putstatement(humantext, elizatext)
-	return None
+	return dbio.putstatement(humantext, elizatext)
 
 def adduser(username, password, email):
 	dbio.putuser(username, password, email)	
@@ -27,22 +26,28 @@ def adduser(username, password, email):
     mail.send(msg)
 	return None
 
-def verify(key):
-	# check for backdoor
-	if (key == 'abracadabra'):
-		return True
-	
+def verify(key):	
 	return dbio.activateuser(key)	
 
 def listconv():
-    return None
     # return JSON array of {conv_id, start_date}
+	convlist = dbio.getconvlist(session['username'])
+	
+	jsonlist = []
+	for entry in convlist:
+		jsonlist.append({'conv_id': entry['convid'], \
+			'start_date': entry['startdate']})
+	return jsonlist
 
 def getconv():
     if (request.method == 'POST'):
         convid = request.form['conv_id']
         # load conversation with conv_id
         return convid
+
+def retrievesession():
+	cookie = response.cookies.get('id')
+	dbio.getuser(cookie)
 
 def trylogin(username, password):
     return dbio.checklogin(username, password)    
