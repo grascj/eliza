@@ -27,6 +27,7 @@ def verify():
 	if (request.method == 'POST'):
 		key = request.form['key']
     else if (request.method == 'GET'):
+		email = request.args.get('email')
 		key = request.args.get.('key')
 	else:
 		return render_template('verify.html')
@@ -44,12 +45,10 @@ def login():
         password = request.form['password']
 		if (session.trylogin(username, password)):
 			return redirect(url_for('eliza'))
-	else:
-		# check for login status
-		if (session.retrievesession()):
-			redirect(url_for('eliza'))
-		else:	
-			render_template('login.html')
+	else if (session.retrievesession()):
+		return redirect(url_for('eliza'))
+	else:	
+		render_template('login.html')
 		
     return None
 
@@ -59,7 +58,6 @@ def logout():
 
 @application.route('/eliza', methods=['POST'])
 def doktor():
-	
     # conversation elements
     question = request.get_json()
     resp = {'eliza': analyze(question['human'])}
