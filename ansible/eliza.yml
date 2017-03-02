@@ -1,5 +1,5 @@
 ---
-- hosts: privcloud
+- hosts: localhost
 
 
   vars:
