@@ -3,20 +3,20 @@ from flask_mail import Mail, Message
 import dbio
 import random
 import string
-from eliza import application
+import eliza
 
 # mail setup
-application.config['MAIL_SERVER'] = 'smpt.gmail.com'
-application.config['MAIL_PORT'] = 465
-application.config['MAIL_USERNAME'] = 'ladoftheropes@gmail.com'
-application.config['MAIL_PASSWORD'] = 'depression!!!'
-application.config['MAIL_USE_TLS'] = False
-application.config['MAIL_USE_SSL'] = True
-mail = Mail(application)
+eliza.application.config['MAIL_SERVER'] = 'smpt.gmail.com'
+eliza.application.config['MAIL_PORT'] = 465
+eliza.application.config['MAIL_USERNAME'] = 'ladoftheropes@gmail.com'
+eliza.application.config['MAIL_PASSWORD'] = 'depression!!!'
+eliza.application.config['MAIL_USE_TLS'] = False
+eliza.application.config['MAIL_USE_SSL'] = True
+mail = Mail(eliza.application)
 
 
 def storestatements(humantext, elizatext):
-    return dbio.putstatement(humantext, elizatext)
+    return dbio.putstatement(session['username'], humantext, elizatext)
 
 
 def adduser(username, password, email):

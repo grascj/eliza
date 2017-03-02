@@ -1,13 +1,13 @@
-from eliza import application
+import eliza
 from flaskext.mysql import MySQL
 
 # database setup
-application.config['MYSQL_DATABASE_USER'] = 'root'
-application.config['MYSQL_DATABASE_PASSWORD'] = 'password'
-application.config['MYSQL_DATABASE_DB'] = 'ElizaDB'
-application.config['MYSQL_DATABASE_HOST'] = 'localhost'
+eliza.application.config['MYSQL_DATABASE_USER'] = 'root'
+eliza.application.config['MYSQL_DATABASE_PASSWORD'] = 'password'
+eliza.application.config['MYSQL_DATABASE_DB'] = 'ElizaDB'
+eliza.application.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql = MySQL()
-mysql.init_app(application)
+mysql.init_app(eliza.application)
 cursor = mysql.connect().cursor()
 
 
