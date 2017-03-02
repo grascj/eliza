@@ -1,5 +1,4 @@
-from eliza import application
+import eliza
 
 if __name__ == "__main__":
-    application.run()
-
+    eliza.application.run()
