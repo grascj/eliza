@@ -1,0 +1,15 @@
+<HTML>
+	<body>
+		{% if msg %}
+		<h1>{{msg}}</h1>
+		{% else %}
+		<form action="">
+			<h1>Enter email:</h1>
+			<input type="text" value="email">
+			<h1>Enter key:</h1>
+			<input type="text" value="key">
+		</form>
+		{% endif %}
+	</body>
+</HTML>
+
