@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for
 import json
-from response import analyze
-import session
 
 application = Flask(__name__)
 application.debug = True
+
+from response import analyze
+import session
 
 
 @application.route('/')
