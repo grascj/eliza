@@ -49,6 +49,7 @@
                   - flask 
                   - flask-mysql
                   - flask-recaptcha
+                  - flask_mail
                 virtualenv: "{{app_path}}eliza/eliza_env"
 
 
@@ -77,9 +78,5 @@
         - name: START NGINX
           command: service nginx restart
           when: started|succeeded
-
-
-
-
 
 
