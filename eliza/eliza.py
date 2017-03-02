@@ -19,8 +19,8 @@ def adduser():
         email = request.form['email']
         session.adduser(username, password, email)
         return redirect(url_for('verify'))
-	else:	
-    	return render_template('adduser.html')
+    else:	
+        return render_template('adduser.html')
 
 @application.route('/verify', methods=['GET', 'POST'])
 def verify():
