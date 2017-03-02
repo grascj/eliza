@@ -1,43 +1,53 @@
-from flask import Flask, redirect, request, url_for
+from flask import redirect, request, session, url_for
 from flask_mail import Mail, Message
-from flaskext.mysql import MySQL
-from datetime import datetime
-
-app = Flask(__name__)
+import dbio
+import random
+import string
+from eliza import application
 
 # mail setup
-app.config['MAIL_SERVER']= 'smpt.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'ladoftheropes@gmail.com'
-app.config['MAIL_PASSWORD'] = 'depression!!!'
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
-mail = Mail(app)
+application.config['MAIL_SERVER'] = 'smpt.gmail.com'
+application.config['MAIL_PORT'] = 465
+application.config['MAIL_USERNAME'] = 'ladoftheropes@gmail.com'
+application.config['MAIL_PASSWORD'] = 'depression!!!'
+application.config['MAIL_USE_TLS'] = False
+application.config['MAIL_USE_SSL'] = True
+mail = Mail(application)
+
 
 def storestatements(humantext, elizatext):
-	return dbio.putstatement(humantext, elizatext)
+    return dbio.putstatement(humantext, elizatext)
+
 
 def adduser(username, password, email):
-	dbio.putuser(username, password, email)	
- 
-	# send email to user with key
-    mbody = 'Your key: \n\n' + ""# some random key
+    dbio.putuser(username, password, email)
+
+    # send email to user with key
+    mbody = 'Your key: \n\n' + ""  # some random key
     msg = Message(subject='Eliza Signup', recipients=email, body=mbody)
     mail.send(msg)
-	return None
+    return None
 
-def verify(key):	
-	return dbio.activateuser(key)	
+
+def generatekey():
+    return ''.join(random.choice(string.ascii_letters + string.digits)
+                   for x in range(15))
+
+
+def verify(key):
+    return dbio.activateuser(key)
+
 
 def listconv():
     # return JSON array of {conv_id, start_date}
-	convlist = dbio.getconvlist(session['username'])
-	
-	jsonlist = []
-	for entry in convlist:
-		jsonlist.append({'conv_id': entry['convid'], \
-			'start_date': entry['startdate']})
-	return jsonlist
+    convlist = dbio.getconvlist(session['username'])
+
+    jsonlist = []
+    for entry in convlist:
+        jsonlist.append({'conv_id': entry['convid'],
+                         'start_date': entry['startdate']})
+    return jsonlist
+
 
 def getconv():
     if (request.method == 'POST'):
@@ -45,21 +55,23 @@ def getconv():
         # load conversation with conv_id
         return convid
 
+
 def retrievesession():
-	cookie = response.cookies.get('id')
-	if (cookie == None):
-		return False
-	
-	username = dbio.getuser(cookie)
-	session['username'] = user
-	return True
+    cookie = request.cookies.get('id')
+    if (cookie is None):
+        return False
+
+    session['username'] = dbio.getuser(cookie)
+    return True
+
 
 def trylogin(username, password):
     if (dbio.checklogin(username, password)):
-		session['username'] = username
-		return True
-	else:
-		return False
+        session['username'] = username
+        return True
+    else:
+        return False
+
 
 def logout():
     session.pop('username', None)

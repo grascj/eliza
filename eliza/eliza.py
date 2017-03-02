@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for
-from datetime import datetime
 import json
 from response import analyze
 import session
@@ -7,9 +6,11 @@ import session
 application = Flask(__name__)
 application.debug = True
 
+
 @application.route('/')
 def redir():
     return redirect(url_for('login'))
+
 
 @application.route('/adduser', methods=['GET', 'POST'])
 def adduser():
@@ -19,20 +20,20 @@ def adduser():
         email = request.form['email']
         session.adduser(username, password, email)
         return redirect(url_for('verify'))
-    else:	
+    else:
         return render_template('adduser.html')
+
 
 @application.route('/verify', methods=['GET', 'POST'])
 def verify():
-	if (request.method == 'POST'):
-		key = request.form['key']
-    else if (request.method == 'GET'):
-		email = request.args.get('email')
-		key = request.args.get.('key')
-	else:
-		return render_template('verify.html')
-    
-	if (session.verify(key)):
+    if (request.method == 'POST'):
+        key = request.form['key']
+    elif (request.method == 'GET'):
+        key = request.args.get('key')
+    else:
+        return render_template('verify.html')
+
+    if (session.verify(key)):
         return redirect(url_for('eliza'))
     else:
         return render_template('verify.html', msg='Incorrect key')
@@ -43,18 +44,19 @@ def login():
     if (request.method == 'POST'):
         username = request.form['username']
         password = request.form['password']
-		if (session.trylogin(username, password)):
-			return redirect(url_for('eliza'))
-	else if (session.retrievesession()):
-		return redirect(url_for('eliza'))
-	else:	
-		render_template('login.html')
-		
+        if (session.trylogin(username, password)):
+            return redirect(url_for('eliza'))
+    elif (session.retrievesession()):
+        return redirect(url_for('eliza'))
+    else:
+        render_template('login.html')
     return None
+
 
 @application.route('/logout', methods=['GET'])
 def logout():
-	return session.logout()
+    return session.logout()
+
 
 @application.route('/eliza', methods=['POST'])
 def doktor():
