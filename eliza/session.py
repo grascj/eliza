@@ -16,7 +16,7 @@ mail = Mail(eliza.application)
 
 
 def storestatements(humantext, elizatext):
-    return dbio.putstatement(session['username'], humantext, elizatext)
+    return dbio.putstatements(session['username'], humantext, elizatext)
 
 
 def adduser(username, password, email):
@@ -35,7 +35,7 @@ def generatekey():
 
 
 def verify(key):
-    return dbio.activateuser(key)
+    return dbio.activateuser(session['username'], key)
 
 
 def listconv():
