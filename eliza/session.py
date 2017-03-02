@@ -47,13 +47,21 @@ def getconv():
 
 def retrievesession():
 	cookie = response.cookies.get('id')
-	dbio.getuser(cookie)
+	if (cookie == None):
+		return False
+	
+	username = dbio.getuser(cookie)
+	session['username'] = user
+	return True
 
 def trylogin(username, password):
-    return dbio.checklogin(username, password)    
+    if (dbio.checklogin(username, password)):
+		session['username'] = username
+		return True
+	else:
+		return False
 
 def logout():
     session.pop('username', None)
-    session.pop('password', None)
 
-    return redirect(url_for('eliza'))
+    return redirect(url_for('login'))

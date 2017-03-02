@@ -2,23 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime
 import json
 from response import analyze
-from flask_recaptcha import ReCaptcha
-#import session
+import session
 
 application = Flask(__name__)
 application.debug = True
-
-recaptcha = ReCaptcha()
-recaptcha.init_app(application)
-recaptcha.is_enabled = True
-recaptcha.theme = "light"
-recaptcha.type = "image"
-recaptcha.size = "normal"
-recaptcha.tabindex = 0
-
-
-print(recaptcha.is_enabled)
-print(recaptcha.get_code())
 
 @application.route('/')
 def redir():
@@ -38,28 +25,32 @@ def adduser():
 @application.route('/verify', methods=['GET', 'POST'])
 def verify():
 	if (request.method == 'POST'):
-        if(recaptcha.verify()):
-        	
 		key = request.form['key']
-        if (session.verify(key)):
-            return redirect(url_for('eliza'))
-        else:
-            return render_template('verify.html', msg='Incorrect key')
-    else:
+    else if (request.method == 'GET'):
+		key = request.args.get.('key')
+	else:
 		return render_template('verify.html')
+    
+	if (session.verify(key)):
+        return redirect(url_for('eliza'))
+    else:
+        return render_template('verify.html', msg='Incorrect key')
+
 
 @application.route('/login', methods=['GET', 'POST'])
 def login():
     if (request.method == 'POST'):
         username = request.form['username']
         password = request.form['password']
+		if (session.trylogin(username, password)):
+			return redirect(url_for('eliza'))
 	else:
 		# check for login status
-		session.
-		render_template('login.html')
-    if (session.trylogin(username, password)):
-		return redirect(url_for('eliza'))
-
+		if (session.retrievesession()):
+			redirect(url_for('eliza'))
+		else:	
+			render_template('login.html')
+		
     return None
 
 @application.route('/logout', methods=['GET'])
