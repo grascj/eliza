@@ -7,6 +7,7 @@ import session
 application = Flask(__name__)
 application.debug = True
 application.config['MONGO_DBNAME'] = 'elizaDB'
+# mongo = PyMongo.MongoClient()
 mongo = PyMongo(application)
 
 
@@ -18,16 +19,12 @@ def redir():
 @application.route('/adduser', methods=['GET', 'POST'])
 def adduser():
     if (request.method == 'POST'):
-        print "POSTED"
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
-        print "CALLING ADDUSER"
         session.adduser(username, password, email)
-        print "EXITED ADDUSER"
         return redirect(url_for('verify'))
     else:
-        print "GET"
         return render_template('adduser.html')
 
 

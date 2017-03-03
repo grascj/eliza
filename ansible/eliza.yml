@@ -25,7 +25,7 @@
                 - python-pip
                 - python-dev
                 - upstart
-                - mysql-server
+                - mongodb
 
 
         - name: INSTALL PACKAGES FROM PIP
@@ -47,9 +47,9 @@
                 name: 
                   - uwsgi 
                   - flask 
-                  - flask-mysql
                   - flask-recaptcha
                   - flask_mail
+                  - Flask-PyMongo
                 virtualenv: "{{app_path}}eliza/eliza_env"
 
 
