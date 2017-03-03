@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_mail import Mail
 from flask_pymongo import PyMongo
 import json
@@ -9,7 +9,7 @@ import datetime
 application = Flask(__name__)
 application.secret_key = "super secret key"
 #  MongoDB Config
-application.debug = True
+# application.debug = True
 application.config['MONGO_DBNAME'] = 'elizaDB'
 mongo = PyMongo(application, config_prefix='MONGO')
 #  Flask-Mail Config
@@ -27,7 +27,7 @@ def redir():
     return redirect(url_for('login'))
 
 
-@application.route('/adduser', methods=['GET', 'POST'])
+@application.route('/adduser/', methods=['GET', 'POST'])
 def adduser():
     if (request.method == 'POST'):
         username = request.form['username']
@@ -39,7 +39,7 @@ def adduser():
         return render_template('adduser.html')
 
 
-@application.route('/verify', methods=['GET', 'POST'])
+@application.route('/verify/', methods=['GET', 'POST'])
 def verify():
     if (request.method == 'POST'):
         key = request.form['key']
@@ -57,7 +57,7 @@ def verify():
         return render_template('verify.html', msg='Incorrect key')
 
 
-@application.route('/login', methods=['GET', 'POST'])
+@application.route('/login/', methods=['GET', 'POST'])
 def login():
     if (request.method == 'POST'):
         username = request.form['username']
@@ -72,19 +72,19 @@ def login():
         return render_template('login.html')
 
 
-@application.route('/logout', methods=['GET'])
+@application.route('/logout/', methods=['GET'])
 def logout():
     return session.logout()
 
 
-@application.route('/listconv', methods=['GET', 'POST'])
+@application.route('/listconv/', methods=['GET', 'POST'])
 def listconv():
     #  List all past conversations from current user
     convlist = session.listconv()
-    return json.dump(convlist)
+    return jsonify(convlist)
 
 
-@application.route('/getconv', methods=['GET', 'POST'])
+@application.route('/getconv/', methods=['GET', 'POST'])
 def getconv():
     #  Returns {status:'OK', conversation:[{timestamp:, name:, text:},...]}
     convid = request.form['convid']
@@ -92,7 +92,7 @@ def getconv():
     return json.dumps(conv)
 
 
-@application.route('/eliza', methods=['GET', 'POST'])
+@application.route('/eliza/', methods=['GET', 'POST'])
 def eliza_p():
     cur = datetime.datetime.now()
     date = str(cur.strftime('%Y-%m-%d %H:%M:%S'))
