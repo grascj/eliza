@@ -42,9 +42,10 @@ def verify():
     if (request.method == 'POST'):
         key = request.form['key']
     elif (request.method == 'GET'):
-        key = request.args.get('key')
-    else:
-        return render_template('verify.html')
+        if('key' in request.args.keys()):
+            key = request.args.get('key')
+        else:
+            return render_template('verify.html')
 
     if (session.verify(key)):
         return redirect(url_for('eliza'))
