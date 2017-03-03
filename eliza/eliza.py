@@ -18,8 +18,6 @@ application.config['MAIL_PASSWORD'] = 'groggy7134'
 application.config['MAIL_USE_TLS'] = False
 application.config['MAIL_USE_SSL'] = True
 mail = Mail(application)
-# mongo = PyMongo.MongoClient()
-mongo = PyMongo(application)
 
 
 @application.route('/')
