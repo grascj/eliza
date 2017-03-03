@@ -37,6 +37,7 @@ def putstatements(username, convid, humantext, elizatext):
                                         'timestamp': datetime.now(),
                                         'name': username,
                                         'text': humantext})
+    return None
 
 
 def putconversation(username, convid):
