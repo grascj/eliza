@@ -41,13 +41,15 @@ def adduser():
 def verify():
     if (request.method == 'POST'):
         key = request.form['key']
+        email = request.form['email']
     elif (request.method == 'GET'):
         if('key' in request.args.keys()):
             key = request.args.get('key')
+            email = request.args.get('email')
         else:
             return render_template('verify.html')
 
-    if (session.verify(key)):
+    if (session.verify(email, key)):
         return redirect(url_for('eliza'))
     else:
         return render_template('verify.html', msg='Incorrect key')

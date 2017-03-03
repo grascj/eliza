@@ -12,10 +12,10 @@ def putuser(username, password, email):
     return None
 
 
-def activateuser(username, key):
-    user = eliza.mongo.db.userTable.find_one({'username': username, 'key': key})
+def activateuser(email, key):
+    user = eliza.mongo.db.userTable.find_one({'email': email, 'key': key})
     if (user is not None or key == 'abracadabra'):
-        eliza.mongo.db.userTable.update_one({'username': username},
+        eliza.mongo.db.userTable.update_one({'email': email},
                                       {'$set': {'activated': 'true'}})
         return True
     else:

@@ -26,8 +26,8 @@ def generatekey():
                    for x in range(15))
 
 
-def verify(key):
-    return dbio.activateuser(session['username'], key)
+def verify(email, key):
+    return dbio.activateuser(email, key)
 
 
 def listconv():
