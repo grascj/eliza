@@ -94,22 +94,16 @@ def getconv():
 
 @application.route("/eliza", methods=['GET', 'POST'])
 def eliza_p():
-    if(request.method == "POST"):
-        name = request.form["name"]
-        cur = datetime.datetime.now()
-        date = cur.strftime("%Y-%m-%d %H:%M:%S")
-        return render_template("eliza.html", name=name, date=date)
-    else:
-        return render_template("eliza.html")
+    cur = datetime.datetime.now()
+    date = cur.strftime("%Y-%m-%d %H:%M:%S")
+    name = session.session["username"]
+    return render_template("eliza.html", name=name, date=date)
 
 
 @application.route("/eliza/DOCTOR", methods=['POST'])
 def doctor():
     question = request.get_json()
-
     resp = {"eliza": analyze(question['human'])}
-    # test comment
-    # question['human'] is the string to be responded to
     return json.dumps(resp)
 
 
