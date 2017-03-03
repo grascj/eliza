@@ -92,7 +92,7 @@ def getconv():
     return json.dumps(conv)
 
 
-@application.route("/eliza", methods=["GET", "POST"])
+@application.route("/eliza", methods=['GET', 'POST'])
 def eliza_p():
     if(request.method == "POST"):
         name = request.form["name"]
@@ -103,7 +103,7 @@ def eliza_p():
         return render_template("eliza.html")
 
 
-@application.route("/eliza/DOCTOR", methods=["POST"])
+@application.route("/eliza/DOCTOR", methods=['POST'])
 def doctor():
     question = request.get_json()
 
@@ -113,5 +113,5 @@ def doctor():
     return json.dumps(resp)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     application.run(host='0.0.0.0')

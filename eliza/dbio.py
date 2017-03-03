@@ -81,4 +81,4 @@ def getconvlist(username):
 
 def getconvcount(username):
     convlist = getconvlist(username)
-    return len(convlist)
+    return convlist.count()
