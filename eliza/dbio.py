@@ -7,8 +7,8 @@ import eliza
 # conversationTable = eliza.mongo.db.conversation
 
 
-def putuser(username, password, email):
-    eliza.mongo.db.userTable.insert_one({'username': username, 'password': password, 'email': email, 'activated': 'false', 'cookie': ''})
+def putuser(username, password, email, key):
+    eliza.mongo.db.userTable.insert_one({'username': username, 'password': password, 'email': email, 'activated': 'false', 'cookie': '', 'key': key})
     return None
 
 
