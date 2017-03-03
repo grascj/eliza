@@ -7,6 +7,7 @@ import session
 import datetime
 
 application = Flask(__name__)
+application.secret_key = "super secret key"
 #  MongoDB Config
 application.debug = True
 application.config['MONGO_DBNAME'] = 'elizaDB'
@@ -51,7 +52,7 @@ def verify():
             return render_template('verify.html')
 
     if (session.verify(email, key)):
-        return redirect(url_for('eliza'))
+        return redirect(url_for('eliza_p'))
     else:
         return render_template('verify.html', msg='Incorrect key')
 
@@ -62,9 +63,11 @@ def login():
         username = request.form['username']
         password = request.form['password']
         if (session.trylogin(username, password)):
-            return redirect(url_for('eliza'))
+            return redirect(url_for('eliza_p'))
+        else:
+            return render_template('login.html')
     elif (session.retrievesession()):
-        return redirect(url_for('eliza'))
+        return redirect(url_for('eliza_p'))
     else:
         return render_template('login.html')
 
@@ -90,7 +93,7 @@ def getconv():
 
 
 @application.route("/eliza", methods=["GET", "POST"])
-def outhere():
+def eliza_p():
     if(request.method == "POST"):
         name = request.form["name"]
         cur = datetime.datetime.now()
@@ -101,7 +104,7 @@ def outhere():
 
 
 @application.route("/eliza/DOCTOR", methods=["POST"])
-def doktor():
+def doctor():
     question = request.get_json()
 
     resp = {"eliza": analyze(question['human'])}
