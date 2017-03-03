@@ -72,6 +72,18 @@ def logout():
     return session.logout()
 
 
+@application.route('/listconv', methods=['GET', 'POST'])
+def listconv():
+    #  List all past conversations from current user
+    return None
+
+
+@application.route('/getconv', methods=['GET', 'POST'])
+def getconv():
+    #  Returns status:'OK',
+    return None
+
+
 @application.route('/eliza', methods=['POST'])
 def doktor():
     # conversation elements
