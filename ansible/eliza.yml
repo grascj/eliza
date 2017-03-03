@@ -61,12 +61,18 @@
           command: mv {{app_path}}ansible/nginx.conf /etc/nginx/nginx.conf
 
 
+        - name: STARTING MONGODB
+          command: mongod
+          
+
         - name: ATTEMPTING TO START ELIZA
           command: start eliza
           register: started
           failed_when: false
           ignore_errors: true
           no_log: true
+
+
 
 
         - name: RESTARTING ELIZA
