@@ -18,6 +18,8 @@ application.config['MAIL_PASSWORD'] = 'groggy7134'
 application.config['MAIL_USE_TLS'] = False
 application.config['MAIL_USE_SSL'] = True
 mail = Mail(application)
+# mongo = PyMongo.MongoClient()
+mongo = PyMongo(application)
 
 
 @application.route('/')
@@ -28,16 +30,12 @@ def redir():
 @application.route('/adduser', methods=['GET', 'POST'])
 def adduser():
     if (request.method == 'POST'):
-        print "POSTED"
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
-        print "CALLING ADDUSER"
         session.adduser(username, password, email)
-        print "EXITED ADDUSER"
         return redirect(url_for('verify'))
     else:
-        print "GET"
         return render_template('adduser.html')
 
 
