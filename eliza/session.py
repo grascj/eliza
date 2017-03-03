@@ -28,6 +28,8 @@ def generatekey():
 
 
 def verify(email, key):
+    print email
+    print key
     return dbio.activateuser(email, key)
 
 
@@ -41,9 +43,9 @@ def listconv():
     return jsonlist
 
 
-def getconv(convid):
+def getconv(username, convid):
     # load conversation with convid
-    return dbio.getconv(convid)
+    return dbio.getconv(username, convid)
 
 
 def retrievesession():
