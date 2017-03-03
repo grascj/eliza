@@ -16,7 +16,8 @@ mail = Mail(eliza.application)
 
 
 def storestatements(humantext, elizatext):
-    return dbio.putstatements(session['username'], humantext, elizatext)
+    return dbio.putstatements(session['username'], session['convid'],
+                              humantext, elizatext)
 
 
 def adduser(username, password, email):
@@ -41,11 +42,10 @@ def verify(key):
 def listconv():
     # return JSON array of {conv_id, start_date}
     convlist = dbio.getconvlist(session['username'])
-
     jsonlist = []
     for entry in convlist:
-        jsonlist.append({'conv_id': entry['convid'],
-                         'start_date': entry['startdate']})
+        jsonlist.append({'convid': entry['convid'],
+                         'startdate': entry['startdate']})
     return jsonlist
 
 
@@ -62,12 +62,14 @@ def retrievesession():
         return False
 
     session['username'] = dbio.getuser(cookie)
+    session['convid'] = dbio.getconvcount(session['username'])
     return True
 
 
 def trylogin(username, password):
     if (dbio.checklogin(username, password)):
         session['username'] = username
+        session['convid'] = dbio.getconvcount(username)
         return True
     else:
         return False
@@ -75,5 +77,4 @@ def trylogin(username, password):
 
 def logout():
     session.pop('username', None)
-
     return redirect(url_for('login'))

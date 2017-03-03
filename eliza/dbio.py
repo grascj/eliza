@@ -1,98 +1,82 @@
+from datetime import datetime
 import eliza
-from flaskext.mysql import MySQL
+from flask_pymongo import PyMongo
 
 # database setup
-eliza.application.config['MYSQL_DATABASE_USER'] = 'root'
-eliza.application.config['MYSQL_DATABASE_PASSWORD'] = 'password'
-eliza.application.config['MYSQL_DATABASE_DB'] = 'ElizaDB'
-eliza.application.config['MYSQL_DATABASE_HOST'] = 'localhost'
-mysql = MySQL()
-mysql.init_app(eliza.application)
-cursor = mysql.connect().cursor()
+eliza.application.config['MONGO_DBNAME'] = 'elizaDB'
+mongo = PyMongo(eliza.application)
+userTable = mongo.db.user
+statementTable = mongo.db.statement
+conversationTable = mongo.db.conversation
 
 
 def putuser(username, password, email):
-    cursor.execute('INSERT INTO ElizaUser(username, password, email) \
-            VALUES(' + username + ', ' + password + ', ' + email + ');')
+    userTable.insert_one({'username': username, 'password': password,
+                          'email': email, 'activated': 'false', 'cookie': ''})
     return None
 
 
 def activateuser(username, key):
-    cursor.execute('SELECT * ElizaUser WHERE username = ' + username +
-                   ' AND key = ' + key)
-    user = cursor.fetchone()
-
-    if (user is None and key != 'abracadabra'):
-        return False
-    else:
-        cursor.execute('UPDATE ElizaUser SET activated = true WHERE username' +
-                       ' = ' + user)
+    user = userTable.find_one({'username': username, 'key': key})
+    if (user is not None or key == 'abracadabra'):
+        userTable.update_one({'username': username},
+                             {'$set': {'activated': 'true'}})
         return True
+    else:
+        return False
 
 
-def putstatements(username, humantext, elizatext):
-    cursor.execute('INSERT INTO Statement(name, text) ' +
-                   'VALUES(' + username + ', ' + humantext + ');')
+def putstatements(username, convid, humantext, elizatext):
+    statementTable.insert_one({'username': username, 'convid': convid,
+                               'timestamp': datetime.now(), 'name': username,
+                               'text': humantext})
 
-    cursor.execute('INSERT INTO Statement(name, text) ' +
-                   'VALUES( Eliza, ' + elizatext + ');')
+    statementTable.insert_one({'username': username, 'convid': convid,
+                               'timestamp': datetime.now(), 'name': username,
+                               'text': humantext})
 
 
-def putconversation(username):
-    cursor.execute('COUNT * FROM Conversation WHERE username = ' + username)
-    convid = cursor.fetchone()
-
-    cursor.execute('INSERT INTO Conversation(username, convid) ' +
-                   'VALUES(' + username + ', ' + convid + ');')
+def putconversation(username, convid):
+    conversationTable.insert_one({'username': username, 'convid': convid,
+                                  'startdate': datetime.today()})
     return None
 
 
 def checklogin(username, password):
-    cursor.execute('SELECT * FROM ElizaUser WHERE username = ' + username +
-                   ' AND password = ' + password + ' AND activated = true')
-
-    user = cursor.fetchone()
-    if (user is None):
-            return False
-
-    return True
+    user = userTable.find_one({'username': username, 'password': password,
+                               'activated': 'true'})
+    if (user is not None):
+        return True
+    else:
+        return False
 
 
 def putcookie(username, cookie):
-    cursor.execute('UPDATE ElizaUser cookie = ' + cookie + ' WHERE username = '
-                   + username)
+    userTable.update_one({'username': username},
+                         {'$set': {'cookie': cookie}})
     return None
 
 
 def getuser(cookie):
-    cursor.execute('SELECT * FROM ElizaUser WHERE cookie = ' + cookie)
-
-    user = cursor.fetchone()
+    user = userTable.find_one({'cookie': cookie})
     return user.username
 
 
 def getconv(username, convid):
-    cursor.execute('SELECT * FROM Conversation WHERE username = ' + username +
-                   'AND convid = ' + convid + ' ORDER BY timestamp DESC')
+    statelist = statementTable.find({'username': username, 'convid': convid})
 
     conv = []
-    while True:
-        entry = cursor.fetchone()
-        if (entry is None):
-            break
+    for entry in statelist:  # sorted(statelist.iterkeys()):
         conv.append(entry)
 
     return conv
 
 
 def getconvlist(username):
-    cursor.execute('SELECT * FROM Conversation WHERE username = ' + username)
-
-    convlist = []
-    while True:
-        entry = cursor.fetchone()
-        if (entry is None):
-            break
-        convlist.append(entry)
-
+    convlist = conversationTable.find({'username': username})
     return convlist
+
+
+def getconvcount(username):
+    convlist = getconvlist(username)
+    return len(convlist)
