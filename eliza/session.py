@@ -70,3 +70,7 @@ def logout():
     session.pop('username', None)
     session.pop('convid', None)
     return redirect(url_for('login'))
+
+
+def getsession():
+    sess = {'username': session['username'], 'convid': session['convid']}

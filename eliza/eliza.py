@@ -81,7 +81,7 @@ def logout():
 def listconv():
     #  List all past conversations from current user
     convlist = session.listconv()
-    return json.dumps(convlist)
+    return dump(convlist)
 
 
 @application.route('/getconv', methods=['GET', 'POST'])
@@ -92,19 +92,19 @@ def getconv():
     return json.dumps(conv)
 
 
-@application.route("/eliza", methods=['GET', 'POST'])
+@application.route('/eliza', methods=['GET', 'POST'])
 def eliza_p():
     cur = datetime.datetime.now()
-    date = str(cur.strftime("%Y-%m-%d %H:%M:%S"))
-    name = session.session["username"]
-    return render_template("eliza.html", name=name, date=date)
+    date = str(cur.strftime('%Y-%m-%d %H:%M:%S'))
+    name = session.session['username']
+    return render_template('eliza.html', name=name, date=date)
 
 
-@application.route("/eliza/DOCTOR", methods=['POST'])
+@application.route('/eliza/DOCTOR', methods=['POST'])
 def doctor():
     question = request.get_json()
-    resp = {"eliza": analyze(question['human'])}
-    session.storestatements(question,resp)
+    resp = {'eliza': analyze(question['human'])}
+    session.storestatements(question,resp['eliza'])
     return json.dumps(resp)
 
 
