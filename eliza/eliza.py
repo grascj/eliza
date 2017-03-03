@@ -51,7 +51,7 @@ def verify():
         else:
             return render_template('verify.html')
 
-    if (session.verify(email, key)):
+    f (session.verify(email, key)):
         return redirect(url_for('eliza_p'))
     else:
         return render_template('verify.html', msg='Incorrect key')
@@ -81,7 +81,7 @@ def logout():
 def listconv():
     #  List all past conversations from current user
     convlist = session.listconv()
-    return dump(convlist)
+    return json.dump(convlist)
 
 
 @application.route('/getconv', methods=['GET', 'POST'])
@@ -104,7 +104,7 @@ def eliza_p():
 def doctor():
     question = request.get_json()
     resp = {'eliza': analyze(question['human'])}
-    session.storestatements(question,resp['eliza'])
+    session.storestatements(question, resp['eliza'])
     return json.dumps(resp)
 
 
