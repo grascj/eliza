@@ -50,8 +50,7 @@ def login():
     elif (session.retrievesession()):
         return redirect(url_for('eliza'))
     else:
-        render_template('login.html')
-    return None
+        return render_template('login.html')
 
 
 @application.route('/logout', methods=['GET'])
