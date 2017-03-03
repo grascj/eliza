@@ -4,6 +4,7 @@ from flask_pymongo import PyMongo
 import json
 from response import analyze
 import session
+import datetime
 
 application = Flask(__name__)
 #  MongoDB Config
@@ -85,17 +86,26 @@ def getconv():
     return None
 
 
-@application.route('/eliza', methods=['POST'])
+@application.route("/eliza", methods=["GET", "POST"])
+def outhere():
+    if(request.method == "POST"):
+        name = request.form["name"]
+        cur = datetime.datetime.now()
+        date = cur.strftime("%Y-%m-%d %H:%M:%S")
+        return render_template("eliza.html", name=name, date=date)
+    else:
+        return render_template("eliza.html")
+
+
+@application.route("/eliza/DOCTOR", methods=["POST"])
 def doktor():
-    # conversation elements
     question = request.get_json()
-    resp = {'eliza': analyze(question['human'])}
 
-    # update conversation in database
-    session.storestatements(question['human'], resp['eliza'])
-
+    resp = {"eliza": analyze(question['human'])}
+    # test comment
     # question['human'] is the string to be responded to
     return json.dumps(resp)
+
 
 if __name__ == "__main__":
     application.run(host='0.0.0.0')
