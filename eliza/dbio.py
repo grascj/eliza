@@ -24,7 +24,7 @@ def activateuser(email, key):
 
 def putstatements(username, convid, humantext, elizatext):
     eliza.mongo.db.tatementTable.insert_one({'username': username, 'convid': convid,
-                                       'timestamp': datetime.now(),
+                                       'timestamp': str(datetime.now()),
                                        'name': username,
                                        'text': humantext})
 
@@ -38,7 +38,7 @@ def putstatements(username, convid, humantext, elizatext):
 def putconversation(username, convid):
     eliza.mongo.db.conversationTable.insert_one({'username': username,
                                            'convid': convid,
-                                           'startdate': datetime.today()})
+                                           'startdate': str(datetime.today())})
     return None
 
 

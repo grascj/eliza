@@ -95,7 +95,7 @@ def getconv():
 @application.route("/eliza", methods=['GET', 'POST'])
 def eliza_p():
     cur = datetime.datetime.now()
-    date = cur.strftime("%Y-%m-%d %H:%M:%S")
+    date = str(cur.strftime("%Y-%m-%d %H:%M:%S"))
     name = session.session["username"]
     return render_template("eliza.html", name=name, date=date)
 
@@ -104,6 +104,7 @@ def eliza_p():
 def doctor():
     question = request.get_json()
     resp = {"eliza": analyze(question['human'])}
+    session.storestatements(question,resp)
     return json.dumps(resp)
 
 
