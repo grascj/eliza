@@ -77,13 +77,16 @@ def logout():
 @application.route('/listconv', methods=['GET', 'POST'])
 def listconv():
     #  List all past conversations from current user
-    return None
+    convlist = session.listconv()
+    return json.dumps(convlist)
 
 
 @application.route('/getconv', methods=['GET', 'POST'])
 def getconv():
-    #  Returns status:'OK',
-    return None
+    #  Returns {status:'OK', conversation:[{timestamp:, name:, text:},...]}
+    convid = request.form['convid']
+    conv = session.getconv(convid)
+    return json.dumps(conv)
 
 
 @application.route("/eliza", methods=["GET", "POST"])

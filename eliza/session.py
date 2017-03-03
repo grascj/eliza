@@ -41,11 +41,9 @@ def listconv():
     return jsonlist
 
 
-def getconv():
-    if (request.method == 'POST'):
-        convid = request.form['conv_id']
-        # load conversation with conv_id
-        return convid
+def getconv(convid):
+    # load conversation with convid
+    return dbio.getconv(convid)
 
 
 def retrievesession():
@@ -68,5 +66,7 @@ def trylogin(username, password):
 
 
 def logout():
+    dbio.putconversation(session['username'], session['convid'])
     session.pop('username', None)
+    session.pop('convid', None)
     return redirect(url_for('login'))
