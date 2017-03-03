@@ -1,18 +1,9 @@
 from flask import redirect, request, session, url_for
-from flask_mail import Mail, Message
+from flask_mail import Message
 import dbio
 import random
 import string
 import eliza
-
-# mail setup
-eliza.application.config['MAIL_SERVER'] = 'smpt.gmail.com'
-eliza.application.config['MAIL_PORT'] = 465
-eliza.application.config['MAIL_USERNAME'] = 'ladoftheropes@gmail.com'
-eliza.application.config['MAIL_PASSWORD'] = 'depression!!!'
-eliza.application.config['MAIL_USE_TLS'] = False
-eliza.application.config['MAIL_USE_SSL'] = True
-mail = Mail(eliza.application)
 
 
 def storestatements(humantext, elizatext):
@@ -25,8 +16,8 @@ def adduser(username, password, email):
 
     # send email to user with key
     mbody = 'Your key: \n\n' + ""  # some random key
-    msg = Message(subject='Eliza Signup', recipients=email, body=mbody)
-    mail.send(msg)
+    msg = Message(subject='Eliza Signup', sender='ladoftheropes@gmail.com', recipients=[email], body=mbody)
+    eliza.mail.send(msg)
     return None
 
 

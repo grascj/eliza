@@ -1,13 +1,23 @@
 from flask import Flask, render_template, request, redirect, url_for
+from flask_mail import Mail
 from flask_pymongo import PyMongo
 import json
 from response import analyze
 import session
 
 application = Flask(__name__)
+#  MongoDB Config
 application.debug = True
 application.config['MONGO_DBNAME'] = 'elizaDB'
-mongo = PyMongo(application)
+mongo = PyMongo(application, config_prefix='MONGO')
+#  Flask-Mail Config
+application.config['MAIL_SERVER'] = 'smtp.gmail.com'
+application.config['MAIL_PORT'] = 465
+application.config['MAIL_USERNAME'] = 'shanekennedy7134'
+application.config['MAIL_PASSWORD'] = 'groggy7134'
+application.config['MAIL_USE_TLS'] = False
+application.config['MAIL_USE_SSL'] = True
+mail = Mail(application)
 
 
 @application.route('/')
