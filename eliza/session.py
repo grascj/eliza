@@ -16,7 +16,7 @@ def adduser(username, password, email):
     dbio.putuser(username, password, email, key)
 
     # send email to user with key
-    mbody = 'Your key: \n\n' + key()  # some random key
+    mbody = 'Your key: \n\n' + key  # some random key
     msg = Message(subject='Eliza Signup', sender='ladoftheropes@gmail.com', recipients=[email], body=mbody)
     eliza.mail.send(msg)
     return None
