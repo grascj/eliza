@@ -83,8 +83,13 @@ def logout():
 @application.route('/listconv', methods=['GET', 'POST'])
 def listconv():
     #  List all past conversations from current user
-    convlist = session.listconv()
-    return jsonify(convlist)
+    if (session.session.get('username')):
+        convlist = session.listconv()
+        stat = "ERROR"
+    else:
+        convlist = []
+        stat = "OK"
+    return jsonify(status=stat, conversations=convlist)
 
 
 @application.route('/getconv', methods=['GET', 'POST'])
@@ -92,11 +97,16 @@ def getconv():
     #  Returns {status:'OK', conversation:[{timestamp:, name:, text:},...]}
     convreq = request.get_json()
     convid = int(convreq['id'])
-    conv = session.getconv(session.session['username'],convid)
-    print "================================================"
-    print jsonify(conv)
-    print "================================================"
-    return conv
+    if (session.session.get('username')):
+        conv = session.getconv(session.session['username'], convid)
+        stat = "OK"
+    else:
+        conv = {}
+        stat = "ERROR"
+    print("================================================")
+    print(jsonify(conv))
+    print("================================================")
+    return jsonify(status=stat, conversation=conv)
 
 
 @application.route('/eliza/', methods=['GET', 'POST'])

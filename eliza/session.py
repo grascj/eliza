@@ -28,8 +28,6 @@ def generatekey():
 
 
 def verify(email, key):
-    print email
-    print key
     return dbio.activateuser(email, key)
 
 
