@@ -9,7 +9,7 @@ import datetime
 application = Flask(__name__)
 application.secret_key = "super secret key"
 #  MongoDB Config
-# application.debug = True
+application.debug = True
 application.config['MONGO_DBNAME'] = 'elizaDB'
 mongo = PyMongo(application, config_prefix='MONGO')
 #  Flask-Mail Config
@@ -27,23 +27,25 @@ def redir():
     return redirect(url_for('login'))
 
 
-@application.route('/adduser/', methods=['GET', 'POST'])
+@application.route('/adduser', methods=['POST'])
 def adduser():
+    req = request.get_json()
+    username = req['username']
+    password = req['password']
+    email = req['email']
     if (request.method == 'POST'):
-        username = request.form['username']
-        password = request.form['password']
-        email = request.form['email']
         session.adduser(username, password, email)
         return redirect(url_for('verify'))
     else:
         return render_template('adduser.html')
 
 
-@application.route('/verify/', methods=['GET', 'POST'])
+@application.route('/verify', methods=['GET', 'POST'])
 def verify():
     if (request.method == 'POST'):
-        key = request.form['key']
-        email = request.form['email']
+        req = request.get_json()
+        key = req['key']
+        email = req['email']
     elif (request.method == 'GET'):
         if('key' in request.args.keys()):
             key = request.args.get('key')
@@ -57,11 +59,12 @@ def verify():
         return render_template('verify.html', msg='Incorrect key')
 
 
-@application.route('/login/', methods=['GET', 'POST'])
+@application.route('/login', methods=['GET', 'POST'])
 def login():
     if (request.method == 'POST'):
-        username = request.form['username']
-        password = request.form['password']
+        req = request.get_json()
+        username = req['username']
+        password = req['password']
         if (session.trylogin(username, password)):
             return redirect(url_for('eliza_p'))
         else:
@@ -72,24 +75,28 @@ def login():
         return render_template('login.html')
 
 
-@application.route('/logout/', methods=['GET'])
+@application.route('/logout', methods=['GET'])
 def logout():
     return session.logout()
 
 
-@application.route('/listconv/', methods=['GET', 'POST'])
+@application.route('/listconv', methods=['GET', 'POST'])
 def listconv():
     #  List all past conversations from current user
     convlist = session.listconv()
     return jsonify(convlist)
 
 
-@application.route('/getconv/', methods=['GET', 'POST'])
+@application.route('/getconv', methods=['GET', 'POST'])
 def getconv():
     #  Returns {status:'OK', conversation:[{timestamp:, name:, text:},...]}
-    convid = request.form['convid']
-    conv = session.getconv(convid)
-    return json.dumps(conv)
+    convreq = request.get_json()
+    convid = int(convreq['id'])
+    conv = session.getconv(session.session['username'],convid)
+    print "================================================"
+    print jsonify(conv)
+    print "================================================"
+    return conv
 
 
 @application.route('/eliza/', methods=['GET', 'POST'])
