@@ -33,30 +33,19 @@ def adduser():
     username = req['username']
     password = req['password']
     email = req['email']
-    if (request.method == 'POST'):
-        session.adduser(username, password, email)
-        return redirect(url_for('verify'))
-    else:
-        return render_template('adduser.html')
+    session.adduser(username, password, email)
+    return jsonify({"status": "OK"})
 
 
-@application.route('/verify', methods=['GET', 'POST'])
+@application.route('/verify', methods=['POST'])
 def verify():
-    if (request.method == 'POST'):
-        req = request.get_json()
-        key = req['key']
-        email = req['email']
-    elif (request.method == 'GET'):
-        if('key' in request.args.keys()):
-            key = request.args.get('key')
-            email = request.args.get('email')
-        else:
-            return render_template('verify.html')
-
+    req = request.get_json()
+    key = req['key']
+    email = req['email']
     if (session.verify(email, key)):
-        return redirect(url_for('eliza_p'))
+        return jsonify({"status": "OK"})
     else:
-        return render_template('verify.html', msg='Incorrect key')
+        return jsonify({"status": "ERROR"})
 
 
 @application.route('/login', methods=['GET', 'POST'])
@@ -66,18 +55,19 @@ def login():
         username = req['username']
         password = req['password']
         if (session.trylogin(username, password)):
-            return redirect(url_for('eliza_p'))
+            return jsonify({"status": "OK"})
         else:
-            return render_template('login.html')
+            return jsonify({"status": "ERROR"})
     elif (session.retrievesession()):
         return redirect(url_for('eliza_p'))
     else:
         return render_template('login.html')
 
 
-@application.route('/logout', methods=['GET'])
+@application.route('/logout', methods=['POST'])
 def logout():
-    return session.logout()
+    session.logout()
+    return jsonify({"status": "OK"})
 
 
 @application.route('/listconv', methods=['GET', 'POST'])
@@ -117,7 +107,7 @@ def eliza_p():
     return render_template('eliza.html', name=name, date=date)
 
 
-@application.route('/eliza/DOCTOR', methods=['POST'])
+@application.route('/DOCTOR', methods=['POST'])
 def doctor():
     question = request.get_json()
     resp = {'eliza': analyze(question['human'])}

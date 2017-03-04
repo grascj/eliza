@@ -20,7 +20,7 @@ function get_therapy(event,name){
 		human_obj.human = human_input;
    		var human_json = JSON.stringify(human_obj);
 		jQuery.ajax ({
-			url: "/eliza/DOCTOR",
+			url: "/DOCTOR",
 			type: "POST",
 			data: human_json,
 			dataType: "json",
