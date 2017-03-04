@@ -51,7 +51,7 @@ def verify():
         else:
             return render_template('verify.html')
 
-    f (session.verify(email, key)):
+    if (session.verify(email, key)):
         return redirect(url_for('eliza_p'))
     else:
         return render_template('verify.html', msg='Incorrect key')
