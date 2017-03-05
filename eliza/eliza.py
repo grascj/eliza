@@ -93,9 +93,9 @@ def getconv():
     else:
         conv = {}
         stat = "ERROR"
-    print("================================================")
-    print(jsonify(conv))
-    print("================================================")
+    #print("================================================")
+    #print(jsonify(conv))
+    #print("================================================")
     return jsonify(status=stat, conversation=conv)
 
 

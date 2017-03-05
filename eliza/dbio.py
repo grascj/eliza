@@ -73,6 +73,7 @@ def getconv(username, convid):
     conv = []
     for entry in statelist:  # sorted(statelist.iterkeys()):
         conv.append(entry)
+        print(entry)
 
     return conv
 
