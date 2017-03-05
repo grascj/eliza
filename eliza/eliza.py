@@ -75,10 +75,10 @@ def listconv():
     #  List all past conversations from current user
     if (session.session.get('username')):
         convlist = session.listconv()
-        stat = "ERROR"
+        stat = "OK"
     else:
         convlist = []
-        stat = "OK"
+        stat = "ERROR"
     return jsonify(status=stat, conversations=convlist)
 
 
