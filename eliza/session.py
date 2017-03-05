@@ -57,7 +57,8 @@ def retrievesession():
 
 
 def trylogin(username, password):
-    if (dbio.checklogin(username, password)):
+    if (dbio.checklogin(username, password)):    
+        dbio.putconversation(session['username'], session['convid'])
         session['username'] = username
         session['convid'] = dbio.getconvcount(username)
         return True
@@ -66,7 +67,6 @@ def trylogin(username, password):
 
 
 def logout():
-    dbio.putconversation(session['username'], session['convid'])
     session.pop('username', None)
     session.pop('convid', None)
     return redirect(url_for('login'))
